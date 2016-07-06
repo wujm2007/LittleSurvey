@@ -1,5 +1,10 @@
 package biz;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +33,9 @@ public class Main {
 			io.println("4) Display a Test");
 			io.println("5) Save a Survey");
 			io.println("6) Save a Test");
-			io.println("7) Quit");
+			io.println("7) Load a Survey");
+			io.println("8) Load a Test");
+			io.println("9) Quit");
 			int op = io.readInt("Select an option");
 			switch (op) {
 			case 1:
@@ -50,6 +57,12 @@ public class Main {
 				save(testQuestions);
 				break;
 			case 7:
+				load(surveyQuestions);
+				break;
+			case 8:
+				load(testQuestions);
+				break;
+			case 9:
 				return;
 			}
 		}
@@ -97,7 +110,31 @@ public class Main {
 	}
 
 	private static void save(List<Question> questions) {
-		// TODO Auto-generated method stub
+		File file = new File(io.readString("Save file name"));
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
+			os.writeObject(questions);
+			os.close();
+			io.println("Saved.");
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+			io.println("Failed.");
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "resource" })
+	private static void load(List<Question> questions) {
+		File file = new File(io.readString("Load file name"));
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
+			questions.clear();
+			List<Question> l = (List<Question>) is.readObject();
+			questions.addAll(l);
+			io.println("Loaded.");
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+			io.println("Failed.");
+		}
 	}
 
 }

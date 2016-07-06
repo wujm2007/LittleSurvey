@@ -1,6 +1,9 @@
 package entity;
 
-public abstract class Question {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public abstract class Question implements Serializable {
 	private String prompt;
 
 	protected Question(String prompt) {
