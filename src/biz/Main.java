@@ -5,23 +5,24 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
 
-import entity.Question;
-import entity.QuestionFactory;
-import entity.SurveyQuestionFactory;
-import entity.TestQuestionFactory;
+import entity.QuestionContainer;
+import entity.QuestionContainerBuilder;
+import entity.Survey;
+import entity.SurveyBuilder;
+import entity.Test;
+import entity.TestBuilder;
 
 public class Main {
-	private static IOHelper io;
-	private static List<Question> surveyQuestions;
-	private static List<Question> testQuestions;
+	private static IOHelper io = IOHelper.getInstance();
+	private static Survey survey;
+	private static Test test;
+	private static QuestionContainerBuilder builder;
 
 	public static void main(String args[]) {
 		io = IOHelper.getInstance();
-		surveyQuestions = new LinkedList<Question>();
-		testQuestions = new LinkedList<Question>();
+		survey = new Survey();
+		test = new Test();
 		showMenu();
 	}
 
@@ -39,28 +40,30 @@ public class Main {
 			int op = io.readInt("Select an option");
 			switch (op) {
 			case 1:
-				create(new SurveyQuestionFactory(), surveyQuestions);
+				builder = new SurveyBuilder();
+				create(survey);
 				break;
 			case 2:
-				create(new TestQuestionFactory(), testQuestions);
+				builder = new TestBuilder();
+				create(test);
 				break;
 			case 3:
-				display(surveyQuestions);
+				display(survey);
 				break;
 			case 4:
-				display(testQuestions);
+				display(test);
 				break;
 			case 5:
-				save(surveyQuestions);
+				save(survey);
 				break;
 			case 6:
-				save(testQuestions);
+				save(test);
 				break;
 			case 7:
-				load(surveyQuestions);
+				load(survey);
 				break;
 			case 8:
-				load(testQuestions);
+				load(test);
 				break;
 			case 9:
 				return;
@@ -68,8 +71,7 @@ public class Main {
 		}
 	}
 
-	private static void create(QuestionFactory factory, List<Question> questions) {
-		questions.clear();
+	private static void create(QuestionContainer container) {
 		while (true) {
 			io.println("1) Add a new T/F question");
 			io.println("2) Add a new multiple choice question");
@@ -80,60 +82,64 @@ public class Main {
 			int op = io.readInt("Select an option");
 			switch (op) {
 			case 1:
-				questions.add(factory.createTF());
+				builder.buildTF();
 				break;
 			case 2:
-				questions.add(factory.createMC());
+				builder.buildMC();
 				break;
 			case 3:
-				questions.add(factory.createSA());
+				builder.buildSA();
 				break;
 			case 4:
-				questions.add(factory.createEssay());
+				builder.buildEssay();
 				break;
 			case 5:
-				questions.add(factory.createRanking());
+				builder.buildRanking();
 				break;
 			case 6:
+				container.addAll(builder.getResult());
 				return;
 			}
 		}
 	}
 
-	private static void display(List<Question> questions) {
-		if (questions == null) {
-			System.out.println("No questions.");
+	private static void display(QuestionContainer container) {
+		if ((container == null) || (container.isEmpty())) {
+			System.out.println("Null QuestionContainer.");
 			return;
 		}
-		for (int i = 0; i < questions.size(); i++)
-			System.out.println((i + 1) + ") " + questions.get(i));
+		for (int i = 0; i < container.size(); i++)
+			System.out.println((i + 1) + ") " + container.getQuestion(i));
 	}
 
-	private static void save(List<Question> questions) {
+	private static void save(QuestionContainer container) {
 		File file = new File(io.readString("Save file name"));
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
-			os.writeObject(questions);
+			os.writeObject(container);
 			os.close();
 			io.println("Saved.");
 		} catch (Exception ex) {
-			// ex.printStackTrace();
-			io.println("Failed.");
+			ex.printStackTrace(System.out);
+			io.println("Save Failed.");
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "resource" })
-	private static void load(List<Question> questions) {
+	@SuppressWarnings("resource")
+	private static void load(QuestionContainer container) {
 		File file = new File(io.readString("Load file name"));
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
-			questions.clear();
-			List<Question> l = (List<Question>) is.readObject();
-			questions.addAll(l);
-			io.println("Loaded.");
+			QuestionContainer c = (QuestionContainer) is.readObject();
+			if (c.getClass() == container.getClass()) {
+				container.clear();
+				container.addAll(c);
+				io.println("Loaded.");
+			} else {
+				io.println("Mismatched type.");
+			}
 		} catch (Exception ex) {
-			// ex.printStackTrace();
-			io.println("Failed.");
+			io.println("Load Failed.");
 		}
 	}
 

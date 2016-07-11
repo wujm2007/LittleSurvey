@@ -6,12 +6,12 @@ import java.io.Serializable;
 public abstract class Question implements Serializable {
 	private String prompt;
 
-	protected Question(String prompt) {
+	public Question(String prompt) {
 		this.prompt = prompt;
 	}
 
 	public String getPrompt() {
-		return this.prompt;
+		return prompt;
 	}
 
 	public void setPrompt(String prompt) {

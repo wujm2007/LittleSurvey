@@ -1,5 +1,6 @@
 package entity;
 
+@SuppressWarnings("serial")
 public class SAQuestion extends Question {
 
 	public SAQuestion(String prompt) {

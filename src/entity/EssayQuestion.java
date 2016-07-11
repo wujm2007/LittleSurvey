@@ -1,5 +1,6 @@
 package entity;
 
+@SuppressWarnings("serial")
 public class EssayQuestion extends Question {
 
 	protected EssayQuestion(String prompt) {
@@ -8,7 +9,7 @@ public class EssayQuestion extends Question {
 
 	@Override
 	public String toString() {
-		String result = this.getPrompt() + "\n";
+		String result = getPrompt() + "\n";
 		return result;
 	}
 

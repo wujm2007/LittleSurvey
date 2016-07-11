@@ -1,39 +1,39 @@
 package entity;
 
 import java.util.List;
+import java.util.Map;
 
-import biz.IOHelper;
+public class TestQuestionFactory {
+	// private static IOHelper io = IOHelper.getInstance();
+	// private static TestQuestionFactory instance;
+	//
+	// private TestQuestionFactory() {
+	// }
+	//
+	// public static TestQuestionFactory getInstace() {
+	// if (instance == null)
+	// instance = new TestQuestionFactory();
+	// return instance;
+	// }
 
-public class TestQuestionFactory extends QuestionFactory {
-	private static IOHelper io = IOHelper.getInstance();
-
-	@Override
-	public TFQuestion createTF() {
-		return new TFTQuestion(io.readPrompt("True/False"), io.readBoolean("Enter correct choice"));
+	public Question createTF(String prompt, boolean standardAnswer) {
+		return new TFTestQuestion(prompt, standardAnswer);
 	}
 
-	@Override
-	public MCQuestion createMC() {
-		List<String> choices;
-		return new MCTQuestion(io.readPrompt("multiple choice"), (choices = io.readMultipleChoices()),
-				io.readCorrectChoices(choices));
+	public Question createMC(String prompt, Map<String, String> map, List<String> standardAnswer) {
+		return new MCTestQuestion(prompt, map, standardAnswer);
 	}
 
-	@Override
-	public SAQuestion createSA() {
-		return new SATQuestion(io.readPrompt("short answer"), io.readString("Enter correct answer"));
+	public Question createSA(String prompt, String standardAnswer) {
+		return new SATestQuestion(prompt, standardAnswer);
 	}
 
-	@Override
-	public EssayQuestion createEssay() {
-		return new EssayTQuestion(io.readPrompt("short answer"));
+	public Question createEssay(String prompt) {
+		return new EssayQuestion(prompt);
 	}
 
-	@Override
-	public RankingQuestion createRanking() {
-		List<String> choices;
-		return new RankingTQuestion(io.readPrompt("ranking"), (choices = io.readRankingchoices()),
-				io.readCorrectRanking(choices));
+	public Question createRanking(String prompt, Map<String, String> map, List<String> standardAnswer) {
+		return new RankingTestQuestion(prompt, map, standardAnswer);
 	}
 
 }

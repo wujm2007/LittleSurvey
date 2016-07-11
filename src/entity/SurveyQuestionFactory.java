@@ -1,33 +1,37 @@
 package entity;
 
-import biz.IOHelper;
+import java.util.Map;
 
-public class SurveyQuestionFactory extends QuestionFactory {
-	private static IOHelper io = IOHelper.getInstance();
+public class SurveyQuestionFactory {
+	// private static SurveyQuestionFactory instance;
+	//
+	// private SurveyQuestionFactory() {
+	// }
+	//
+	// public static SurveyQuestionFactory getInstace() {
+	// if (instance == null)
+	// instance = new SurveyQuestionFactory();
+	// return instance;
+	// }
 
-	@Override
-	public TFQuestion createTF() {
-		return new TFQuestion(io.readPrompt("True/False"));
+	public Question createTF(String prompt) {
+		return new TFQuestion(prompt);
 	}
 
-	@Override
-	public MCQuestion createMC() {
-		return new MCQuestion(io.readPrompt("multiple choice"), io.readMultipleChoices());
+	public Question createMC(String prompt, Map<String, String> map) {
+		return new MCQuestion(prompt, map);
 	}
 
-	@Override
-	public SAQuestion createSA() {
-		return new SAQuestion(io.readPrompt("short answer"));
+	public Question createSA(String prompt) {
+		return new SAQuestion(prompt);
 	}
 
-	@Override
-	public EssayQuestion createEssay() {
-		return new EssayQuestion(io.readPrompt("short answer"));
+	public Question createEssay(String prompt) {
+		return new EssayQuestion(prompt);
 	}
 
-	@Override
-	public RankingQuestion createRanking() {
-		return new RankingQuestion(io.readPrompt("ranking"), io.readRankingchoices());
+	public Question createRanking(String prompt, Map<String, String> map) {
+		return new RankingQuestion(prompt, map);
 	}
 
 }

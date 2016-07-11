@@ -1,28 +1,22 @@
 package entity;
 
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
+@SuppressWarnings("serial")
 public class MCQuestion extends Question {
-	protected Map<Integer, String> choices;
+	protected Map<String, String> choices;
 
-	protected MCQuestion(String prompt, List<String> choices) {
+	protected MCQuestion(String prompt, Map<String, String> map) {
 		super(prompt);
-		this.choices = new TreeMap<Integer, String>();
-		for (int i = 0; i < choices.size(); i++)
-			this.choices.put(i, choices.get(i));
+		this.choices = map;
 	}
 
 	@Override
 	public String toString() {
-		String result = "";
-		result += this.getPrompt() + "\n";
-		for (int key : choices.keySet()) {
-			result += (char) ('A' + key) + ") " + choices.get(key) + " ";
-		}
+		String result = "" + getPrompt() + "\n";
+		for (String key : choices.keySet())
+			result += key + ") " + choices.get(key) + " ";
 		result += "\n";
 		return result;
 	}
-
 }

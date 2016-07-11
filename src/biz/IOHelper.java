@@ -1,7 +1,9 @@
 package biz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class IOHelper {
@@ -44,46 +46,52 @@ public class IOHelper {
 		System.out.println(msg);
 	}
 
-	public List<String> readMultipleChoices() {
-		int n = readInt("Enter the number of choices for your multiple choice question");
-		List<String> l = new ArrayList<String>();
-		for (int i = 0; i < n; i++)
-			l.add(readString("(" + (char)('A' + i) + ")"));
-		return l;
-	}
-
-	public List<Integer> readCorrectChoices(List<String> choices) {
+	public List<String> readCorrectChoices(Map<String, String> choices) {
 		int n = readInt("Enter the number of correct choices for your multiple choice question");
-		if (n > choices.size()) {
-			println("Number Error!");
+		if ((n > choices.size()) || (n < 1)) {
+			this.println("Invalid number.");
 			return readCorrectChoices(choices);
 		}
-		List<Integer> l = new ArrayList<Integer>();
+		List<String> choiceList = new ArrayList<String>();
 		for (int i = 0; i < n; i++) {
-			int tmp = readInt("correct answer #" + (i + 1));
-			if ((tmp <= choices.size()) && (!l.contains(tmp)))
-				l.add(tmp);
-			else
+			String tmp = readString("correct answer #" + (i + 1));
+			if ((choices.containsKey(tmp)) && (!choiceList.contains(tmp)))
+				choiceList.add(tmp);
+			else {
+				println("Invalid index.");
 				i--;
+			}
 		}
-		return l;
+		return choiceList;
 	}
 
-	public List<String> readRankingchoices() {
-		int n = readInt("Enter the number of choices for your ranking question.");
-		List<String> l = new ArrayList<String>();
-		for (int i = 0; i < n; i++)
-			l.add(readString("(" + (char)('A' + i) + ")"));
-		return l;
-	}
-
-	public List<Integer> readCorrectRanking(List<String> choices) {
+	public List<String> readCorrectRanking(Map<String, String> choices) {
 		System.out.println("Enter the correct ranking:");
-		List<Integer> l = new ArrayList<Integer>();
+		List<String> l = new ArrayList<String>();
 		for (int i = 0; i < choices.size(); i++) {
-			l.add(this.readInt("#" + (i + 1)));
+			String tmp = readString("#" + (i + 1));
+			if ((choices.containsKey(tmp)) && (!l.contains(tmp)))
+				l.add(tmp);
+			else {
+				println("Invalid index.");
+				i--;
+			}
 		}
 		return l;
+	}
+
+	public Map<String, String> readChoices(String type) {
+		int n = readInt("Enter the number of choices for your " + type + " question");
+		if (n <= 1) {
+			this.println("Invalid number.");
+			return readChoices(type);
+		}
+		Map<String, String> choiceList = new HashMap<String, String>();
+		for (int i = 0; i < n; i++) {
+			String index = "" + (char) ('A' + i);
+			choiceList.put(index, readString("(" + index + ")"));
+		}
+		return choiceList;
 	}
 
 	public boolean readBoolean(String msg) {
