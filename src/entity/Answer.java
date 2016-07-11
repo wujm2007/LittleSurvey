@@ -21,6 +21,8 @@ public class Answer implements Serializable {
 	}
 
 	public boolean match(Answer answer) {
+		if (answer == null)
+			return false;
 		if ((this.getQuestion() == answer.getQuestion()) && (this.getValue().equals(answer.getValue())))
 			return true;
 		else

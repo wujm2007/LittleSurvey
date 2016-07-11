@@ -1,9 +1,7 @@
 package biz;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class IOHelper {
@@ -46,67 +44,17 @@ public class IOHelper {
 		System.out.println(msg);
 	}
 
-	public List<String> readCorrectChoices(Map<String, String> choices) {
-		int n = readInt("Enter the number of correct choices for your multiple choice question");
-		if ((n > choices.size()) || (n < 1)) {
-			this.println("Invalid number.");
-			return readCorrectChoices(choices);
-		}
-		List<String> choiceList = new ArrayList<String>();
-		for (int i = 0; i < n; i++) {
-			String tmp = readString("correct answer #" + (i + 1));
-			if ((choices.containsKey(tmp)) && (!choiceList.contains(tmp)))
-				choiceList.add(tmp);
-			else {
-				println("Invalid index.");
-				i--;
-			}
-		}
-		return choiceList;
-	}
-
-	public List<String> readCorrectRanking(Map<String, String> choices) {
-		System.out.println("Enter the correct ranking:");
-		List<String> l = new ArrayList<String>();
-		for (int i = 0; i < choices.size(); i++) {
-			String tmp = readString("#" + (i + 1));
-			if ((choices.containsKey(tmp)) && (!l.contains(tmp)))
-				l.add(tmp);
-			else {
-				println("Invalid index.");
-				i--;
-			}
-		}
-		return l;
-	}
-
-	public Map<String, String> readChoices(String type) {
-		int n = readInt("Enter the number of choices for your " + type + " question");
+	public List<String> readChoices(String type) {
+		int n = readInt("Enter the number of choices for " + type);
 		if (n <= 1) {
 			this.println("Invalid number.");
 			return readChoices(type);
 		}
-		Map<String, String> choiceList = new HashMap<String, String>();
+		List<String> choiceList = new LinkedList<String>();
 		for (int i = 0; i < n; i++) {
-			String index = "" + (char) ('A' + i);
-			choiceList.put(index, readString("(" + index + ")"));
+			choiceList.add(readString("(" + (char) ('A' + i) + ")"));
 		}
 		return choiceList;
-	}
-
-	public boolean readBoolean(String msg) {
-		scanner = new Scanner(System.in);
-		System.out.println(msg + " :");
-		System.out.print("> ");
-		String input = scanner.next();
-		if (input.toUpperCase().equals("T"))
-			return true;
-		else if (input.toUpperCase().equals("F"))
-			return false;
-		else {
-			System.out.println("Boolean Format Error!");
-			return readBoolean(msg);
-		}
 	}
 
 	public String readString(String msg) {
@@ -119,6 +67,15 @@ public class IOHelper {
 	private String read() {
 		scanner = new Scanner(System.in);
 		return scanner.next();
+	}
+
+	public int getIndex(String tmp) {
+		if (tmp.length() == 1) {
+			char charInedex = tmp.charAt(0);
+			if ((charInedex >= 'A') && (charInedex <= 'Z'))
+				return charInedex - 'A';
+		}
+		return -1;
 	}
 
 }

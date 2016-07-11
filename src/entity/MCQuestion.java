@@ -1,21 +1,40 @@
 package entity;
 
-import java.util.Map;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class MCQuestion extends Question {
-	protected Map<String, String> choices;
+	private String prompt;
+	protected List<String> choices;
 
-	protected MCQuestion(String prompt, Map<String, String> map) {
-		super(prompt);
-		this.choices = map;
+	@Override
+	protected String getPrompt() {
+		return prompt;
+	}
+
+	@Override
+	public void setPrompt(String prompt) {
+		this.prompt = prompt;
+	}
+
+	public final List<String> getChoices() {
+		return choices;
+	}
+
+	public MCQuestion() {
+		init();
+	}
+
+	private void init() {
+		setPrompt(io().readPrompt("multiple choice"));
+		choices = io().readChoices("multiple choice");
 	}
 
 	@Override
 	public String toString() {
 		String result = "" + getPrompt() + "\n";
-		for (String key : choices.keySet())
-			result += key + ") " + choices.get(key) + " ";
+		for (int i = 0; i < choices.size(); i++)
+			result += (char) ('A' + i) + ") " + choices.get(i) + " ";
 		result += "\n";
 		return result;
 	}

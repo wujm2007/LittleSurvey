@@ -2,10 +2,9 @@ package entity;
 
 @SuppressWarnings("serial")
 public class TFTestQuestion extends TestQuestion {
-	protected TFTestQuestion(String prompt, boolean standardAnswer) {
-		super(prompt);
-		setQuestion(new TFQuestion(prompt));
-		setAnswer(standardAnswer);
+	protected TFTestQuestion() {
+		setQuestion(new TFQuestion());
+		setAnswer(readBoolean());
 	}
 
 	@Override
@@ -13,5 +12,17 @@ public class TFTestQuestion extends TestQuestion {
 		String result = "" + getPrompt() + "\n" + "T/F\n";
 		result += "The correct answer is " + ((boolean) getAnswer().getValue() ? "T" : "F") + "\n";
 		return result;
+	}
+
+	public boolean readBoolean() {
+		String input = io().readString("Enter correct choice");
+		if (input.toUpperCase().equals("T"))
+			return true;
+		else if (input.toUpperCase().equals("F"))
+			return false;
+		else {
+			System.out.println("Boolean Format Error!");
+			return readBoolean();
+		}
 	}
 }

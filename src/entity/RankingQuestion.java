@@ -1,23 +1,37 @@
 package entity;
 
-import java.util.Map;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class RankingQuestion extends Question {
-	protected Map<String, String> choices;
+	private String prompt;
+	protected List<String> choices;
 
-	public RankingQuestion(String prompt, Map<String, String> map) {
-		super(prompt);
-		this.choices = map;
+	@Override
+	protected String getPrompt() {
+		return prompt;
+	}
+
+	@Override
+	public void setPrompt(String prompt) {
+		this.prompt = prompt;
+	}
+
+	public final List<String> getChoices() {
+		return choices;
+	}
+
+	public RankingQuestion() {
+		setPrompt(io().readPrompt("ranking"));
+		choices = io().readChoices("ranking");
 	}
 
 	@Override
 	public String toString() {
 		String result = "";
 		result += this.getPrompt() + "\n";
-		for (String key : choices.keySet()) {
-			result += key + ") " + choices.get(key) + " ";
-		}
+		for (int i = 0; i < choices.size(); i++)
+			result += (char) ('A' + i) + ") " + choices.get(i) + " ";
 		result += "\n";
 		return result;
 	}

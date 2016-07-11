@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class Survey extends QuestionContainer {
+public class Survey extends Questionnaire {
 	private List<Question> questions = new LinkedList<Question>();
 
 	@Override

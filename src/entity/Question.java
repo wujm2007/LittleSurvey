@@ -2,21 +2,18 @@ package entity;
 
 import java.io.Serializable;
 
+import biz.IOHelper;
+
 @SuppressWarnings("serial")
 public abstract class Question implements Serializable {
-	private String prompt;
 
-	public Question(String prompt) {
-		this.prompt = prompt;
+	public IOHelper io() {
+		return IOHelper.getInstance();
 	}
 
-	public String getPrompt() {
-		return prompt;
-	}
+	protected abstract String getPrompt();
 
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
-	}
+	public abstract void setPrompt(String prompt);
 
 	@Override
 	public abstract String toString();

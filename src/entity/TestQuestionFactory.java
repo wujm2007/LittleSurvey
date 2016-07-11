@@ -1,39 +1,29 @@
 package entity;
 
-import java.util.List;
-import java.util.Map;
+public class TestQuestionFactory extends QuestionFactory {
 
-public class TestQuestionFactory {
-	// private static IOHelper io = IOHelper.getInstance();
-	// private static TestQuestionFactory instance;
-	//
-	// private TestQuestionFactory() {
-	// }
-	//
-	// public static TestQuestionFactory getInstace() {
-	// if (instance == null)
-	// instance = new TestQuestionFactory();
-	// return instance;
-	// }
-
-	public Question createTF(String prompt, boolean standardAnswer) {
-		return new TFTestQuestion(prompt, standardAnswer);
+	public Question createTF() {
+		return new TFTestQuestion();
 	}
 
-	public Question createMC(String prompt, Map<String, String> map, List<String> standardAnswer) {
-		return new MCTestQuestion(prompt, map, standardAnswer);
+	public Question createMC() {
+		return new MCTestQuestion();
 	}
 
-	public Question createSA(String prompt, String standardAnswer) {
-		return new SATestQuestion(prompt, standardAnswer);
+	public Question createSA() {
+		return new SATestQuestion();
 	}
 
-	public Question createEssay(String prompt) {
-		return new EssayQuestion(prompt);
+	public Question createEssay() {
+		return new EssayQuestion();
 	}
 
-	public Question createRanking(String prompt, Map<String, String> map, List<String> standardAnswer) {
-		return new RankingTestQuestion(prompt, map, standardAnswer);
+	public Question createRanking() {
+		return new RankingTestQuestion();
+	}
+
+	public Question createMatching() {
+		return new MatchingTestQuestion();
 	}
 
 }

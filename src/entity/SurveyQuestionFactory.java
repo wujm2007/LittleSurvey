@@ -1,37 +1,28 @@
 package entity;
 
-import java.util.Map;
-
-public class SurveyQuestionFactory {
-	// private static SurveyQuestionFactory instance;
-	//
-	// private SurveyQuestionFactory() {
-	// }
-	//
-	// public static SurveyQuestionFactory getInstace() {
-	// if (instance == null)
-	// instance = new SurveyQuestionFactory();
-	// return instance;
-	// }
-
-	public Question createTF(String prompt) {
-		return new TFQuestion(prompt);
+public class SurveyQuestionFactory extends QuestionFactory {
+	public Question createTF() {
+		return new TFQuestion();
 	}
 
-	public Question createMC(String prompt, Map<String, String> map) {
-		return new MCQuestion(prompt, map);
+	public Question createMC() {
+		return new MCQuestion();
 	}
 
-	public Question createSA(String prompt) {
-		return new SAQuestion(prompt);
+	public Question createSA() {
+		return new SAQuestion();
 	}
 
-	public Question createEssay(String prompt) {
-		return new EssayQuestion(prompt);
+	public Question createEssay() {
+		return new EssayQuestion();
 	}
 
-	public Question createRanking(String prompt, Map<String, String> map) {
-		return new RankingQuestion(prompt, map);
+	public Question createRanking() {
+		return new RankingQuestion();
+	}
+
+	public Question createMatching() {
+		return new MatchingQuestion();
 	}
 
 }

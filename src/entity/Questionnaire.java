@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 @SuppressWarnings("serial")
-public abstract class QuestionContainer implements Iterable<Question>, Serializable {
+public abstract class Questionnaire implements Iterable<Question>, Serializable {
 
 	@Override
 	public abstract Iterator<Question> iterator();
@@ -17,7 +17,7 @@ public abstract class QuestionContainer implements Iterable<Question>, Serializa
 
 	public abstract int size();
 
-	public void addAll(QuestionContainer c) {
+	public void addAll(Questionnaire c) {
 		for (Question q : c)
 			addQuestion(q);
 	}

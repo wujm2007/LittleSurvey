@@ -2,10 +2,9 @@ package entity;
 
 @SuppressWarnings("serial")
 public class SATestQuestion extends TestQuestion {
-	public SATestQuestion(String prompt, String standardAnswer) {
-		super(prompt);
-		setQuestion(new SAQuestion(prompt));
-		setAnswer(standardAnswer);
+	public SATestQuestion() {
+		setQuestion(new SAQuestion());
+		setAnswer(io().readString("Enter correct answer"));
 	}
 
 	@Override
