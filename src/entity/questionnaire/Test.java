@@ -1,8 +1,13 @@
-package entity;
+package entity.questionnaire;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import entity.AnswerSheet;
+import entity.questionnaire.Questionnaire;
+import entity.question.Gradable;
+import entity.question.Question;
 
 @SuppressWarnings("serial")
 public class Test extends Questionnaire {

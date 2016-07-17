@@ -1,7 +1,9 @@
-package entity;
+package entity.questionnaire;
 
 import java.io.Serializable;
 import java.util.Iterator;
+
+import entity.question.Question;
 
 @SuppressWarnings("serial")
 public abstract class Questionnaire implements Iterable<Question>, Serializable {

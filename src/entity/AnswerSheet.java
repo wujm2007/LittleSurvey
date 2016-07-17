@@ -1,6 +1,10 @@
 package entity;
 
 import java.util.Map;
+
+import entity.answer.Answer;
+import entity.question.Question;
+
 import java.util.HashMap;
 
 public class AnswerSheet {

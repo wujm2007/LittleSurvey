@@ -1,14 +1,13 @@
-package entity;
+package entity.question;
+
+import entity.answer.Answer;
+import entity.answer.EssayAnswer;
 
 @SuppressWarnings("serial")
 public class EssayQuestion extends Question {
 	private String prompt;
 
-	protected EssayQuestion() {
-		init();
-	}
-
-	private void init() {
+	public EssayQuestion() {
 		setPrompt(io().readPrompt("essay"));
 	}
 
@@ -19,12 +18,22 @@ public class EssayQuestion extends Question {
 	}
 
 	@Override
-	protected String getPrompt() {
+	public String getPrompt() {
 		return prompt;
 	}
 
 	@Override
 	public void setPrompt(String prompt) {
 		this.prompt = prompt;
+	}
+
+	@Override
+	public void modify() {
+		setPrompt(io().readPrompt("essay"));
+	}
+
+	@Override
+	public Answer makeAnswer() {
+		return new EssayAnswer(this, io().readString("Essay answer"));
 	}
 }

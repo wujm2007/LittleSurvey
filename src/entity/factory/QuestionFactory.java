@@ -1,4 +1,6 @@
-package entity;
+package entity.factory;
+
+import entity.question.Question;
 
 public abstract class QuestionFactory {
 

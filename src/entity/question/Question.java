@@ -1,8 +1,9 @@
-package entity;
+package entity.question;
 
 import java.io.Serializable;
 
-import biz.IOHelper;
+import entity.answer.Answer;
+import util.IOHelper;
 
 @SuppressWarnings("serial")
 public abstract class Question implements Serializable {
@@ -11,10 +12,14 @@ public abstract class Question implements Serializable {
 		return IOHelper.getInstance();
 	}
 
-	protected abstract String getPrompt();
+	public abstract String getPrompt();
 
 	public abstract void setPrompt(String prompt);
 
 	@Override
 	public abstract String toString();
+
+	public abstract void modify();
+
+	public abstract Answer makeAnswer();
 }

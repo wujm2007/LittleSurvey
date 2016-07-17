@@ -1,4 +1,12 @@
-package entity;
+package entity.factory;
+
+import entity.question.EssayQuestion;
+import entity.question.MCTestQuestion;
+import entity.question.MatchingTestQuestion;
+import entity.question.Question;
+import entity.question.RankingTestQuestion;
+import entity.question.SATestQuestion;
+import entity.question.TFTestQuestion;
 
 public class TestQuestionFactory extends QuestionFactory {
 

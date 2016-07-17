@@ -1,4 +1,4 @@
-package biz;
+package driver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,12 +6,13 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import entity.Questionnaire;
-import entity.QuestionFactory;
-import entity.Survey;
-import entity.SurveyQuestionFactory;
-import entity.Test;
-import entity.TestQuestionFactory;
+import entity.factory.QuestionFactory;
+import entity.factory.SurveyQuestionFactory;
+import entity.factory.TestQuestionFactory;
+import entity.questionnaire.Questionnaire;
+import entity.questionnaire.Survey;
+import entity.questionnaire.Test;
+import util.IOHelper;
 
 public class Main {
 	private static IOHelper io = IOHelper.getInstance();
@@ -34,9 +35,13 @@ public class Main {
 			io.println("4) Display a Test");
 			io.println("5) Save a Survey");
 			io.println("6) Save a Test");
-			io.println("7) Load a Survey");
-			io.println("8) Load a Test");
-			io.println("9) Quit");
+			io.println("7) Modify a Survey");
+			io.println("8) Modify a Test");
+			io.println("9) Load a Survey");
+			io.println("10) Load a Test");
+			io.println("11) Take a Survey");
+			io.println("12) Take a Test");
+			io.println("13) Quit");
 			int op = io.readInt("Select an option");
 			switch (op) {
 			case 1:
@@ -60,15 +65,47 @@ public class Main {
 				save(test);
 				break;
 			case 7:
-				load(survey);
+				modify(survey);
 				break;
 			case 8:
-				load(test);
+				modify(test);
 				break;
 			case 9:
+				load(survey);
+				break;
+			case 10:
+				load(test);
+				break;
+			case 11:
+				take(survey);
+				break;
+			case 12:
+				take(test);
+				break;
+			case 13:
 				return;
 			}
 		}
+	}
+
+	private static void take(Questionnaire container) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void modify(Questionnaire container) {
+		if ((container == null) || (container.size() == 0))
+			io.println("It's empty.");
+
+		for (int i = 0; i < container.size(); i++)
+			io.println((i + 1) + ") " + container.getQuestion(i).getPrompt());
+
+		int index = 0;
+		do
+			index = io.readInt("What question do you wish to modify") - 1;
+		while ((index < 0) || (index >= container.size()));
+
+		container.getQuestion(index).modify();
 	}
 
 	private static void create(Questionnaire container) {

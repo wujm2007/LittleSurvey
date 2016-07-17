@@ -1,4 +1,6 @@
-package entity;
+package entity.question;
+
+import entity.answer.Answer;
 
 @SuppressWarnings("serial")
 public abstract class TestQuestion extends Question implements Gradable {
@@ -13,16 +15,16 @@ public abstract class TestQuestion extends Question implements Gradable {
 		this.question = questionWithoutAnswer;
 	}
 
-	public void setAnswer(Object answer) {
-		this.answer = new Answer(this, answer);
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
 	}
 
 	public Answer getAnswer() {
-		return this.answer;
+		return answer;
 	}
 
 	@Override
-	protected String getPrompt() {
+	public String getPrompt() {
 		return getQuestion().getPrompt();
 	}
 
@@ -33,6 +35,10 @@ public abstract class TestQuestion extends Question implements Gradable {
 
 	@Override
 	public boolean isCorrect(Answer answer) {
-		return this.answer.match(answer);
+		return getAnswer().match(answer);
+	}
+
+	public Answer makeAnswer() {
+		return getQuestion().makeAnswer();
 	}
 }
