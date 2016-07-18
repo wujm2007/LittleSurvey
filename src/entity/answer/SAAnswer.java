@@ -12,17 +12,12 @@ public class SAAnswer extends Answer {
 	}
 
 	@Override
-	public boolean match(Answer answer) {
-		if ((answer == null) || (getQuestion() != answer.getQuestion()))
-			return false;
-		else if (answer instanceof MatchingAnswer)
-			return content.equals(((SAAnswer) answer).content);
-		else
-			return false;
+	public String toString() {
+		return content;
 	}
 
 	@Override
-	public String toString() {
+	public Object getValue() {
 		return content;
 	}
 

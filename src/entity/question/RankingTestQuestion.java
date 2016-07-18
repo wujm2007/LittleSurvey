@@ -1,24 +1,19 @@
 package entity.question;
 
+import util.visitor.QuestionVisitor;
+
 @SuppressWarnings("serial")
 public class RankingTestQuestion extends TestQuestion {
 
-	public RankingTestQuestion() {
-		setQuestion(new RankingQuestion());
-		setAnswer(makeAnswer());
-	}
-
 	@Override
 	public String toString() {
-		String result = getQuestion().toString();
-		result += "The correct ranking is " + getAnswer() + "\n";
+		String result = getQuestion().toString() + "\n";
+		result += "The correct ranking is " + getAnswer();
 		return result;
 	}
 
 	@Override
-	public void modify() {
-		getQuestion().modify();
-		if (io().readBoolean("Do you wish to modify the answer", "yes", "no"))
-			setAnswer(makeAnswer());
+	public void accept(QuestionVisitor v) {
+		v.visitRankingTest(this);
 	}
 }

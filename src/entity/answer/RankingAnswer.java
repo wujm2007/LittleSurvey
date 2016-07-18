@@ -15,21 +15,16 @@ public class RankingAnswer extends Answer {
 	}
 
 	@Override
-	public boolean match(Answer answer) {
-		if ((answer == null) || (getQuestion() != answer.getQuestion()))
-			return false;
-		else if (answer instanceof RankingAnswer)
-			return map.equals(((RankingAnswer) answer).map);
-		else
-			return false;
-	}
-
-	@Override
 	public String toString() {
 		String result = "";
 		for (int key : map.keySet())
-			result += "(" + (key + 1) + ") " + map.get(key) + "\t";
+			result += (key + 1) + ": " + map.get(key) + "\t";
 		return result;
+	}
+
+	@Override
+	public Object getValue() {
+		return map;
 	}
 
 }

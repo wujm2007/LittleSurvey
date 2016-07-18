@@ -16,7 +16,14 @@ public abstract class Answer implements Serializable {
 		return question;
 	}
 
-	public abstract boolean match(Answer answer);
+	public abstract Object getValue();
+
+	public boolean match(Answer answer) {
+		if ((answer == null) || (getQuestion() != answer.getQuestion()))
+			return false;
+		else
+			return getValue().equals(((MatchingAnswer) answer).getValue());
+	}
 
 	public abstract String toString();
 }

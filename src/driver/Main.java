@@ -5,7 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import entity.AnswerSheet;
+import entity.answer.Answer;
 import entity.factory.QuestionFactory;
 import entity.factory.SurveyQuestionFactory;
 import entity.factory.TestQuestionFactory;
@@ -16,14 +20,14 @@ import util.IOHelper;
 
 public class Main {
 	private static IOHelper io = IOHelper.getInstance();
-	private static Survey survey;
-	private static Test test;
+	private static Map<String, Survey> surveys;
+	private static Map<String, Test> tests;
 	private static QuestionFactory factory;
 
 	public static void main(String args[]) {
 		io = IOHelper.getInstance();
-		survey = new Survey();
-		test = new Test();
+		surveys = new HashMap<String, Survey>();
+		tests = new HashMap<String, Test>();
 		showMenu();
 	}
 
@@ -46,69 +50,114 @@ public class Main {
 			switch (op) {
 			case 1:
 				factory = new SurveyQuestionFactory();
-				create(survey);
+				Survey createdSurvey = (Survey) create("Survey");
+				surveys.put(createdSurvey.getName(), createdSurvey);
 				break;
 			case 2:
 				factory = new TestQuestionFactory();
-				create(test);
+				Test createdTest = (Test) create("Test");
+				tests.put(createdTest.getName(), createdTest);
 				break;
 			case 3:
-				display(survey);
+				display(surveys);
 				break;
 			case 4:
-				display(test);
+				display(tests);
 				break;
 			case 5:
-				save(survey);
+				save(surveys);
 				break;
 			case 6:
-				save(test);
+				save(tests);
 				break;
 			case 7:
-				modify(survey);
+				modify(surveys);
 				break;
 			case 8:
-				modify(test);
+				modify(tests);
 				break;
 			case 9:
-				load(survey);
+				Survey loadedSurvey = (Survey) load("Survey");
+				surveys.put(loadedSurvey.getName(), loadedSurvey);
 				break;
 			case 10:
-				load(test);
+				Test loadedTest = (Test) load("Test");
+				tests.put(loadedTest.getName(), loadedTest);
 				break;
 			case 11:
-				take(survey);
+				take(surveys);
 				break;
 			case 12:
-				take(test);
+				take(tests);
 				break;
 			case 13:
 				return;
+			case 14:
+				loadAnswerSheet();
 			}
 		}
 	}
 
-	private static void take(Questionnaire container) {
-		// TODO Auto-generated method stub
+	private static void take(Map<String, ? extends Questionnaire> qnMap) {
+		String qnName = io.readString("What questionnaire do you wish to take?");
+		Questionnaire container = qnMap.get(qnName);
 
+		if ((container == null) || (container.size() == 0)) {
+			io.println("The questionnaire is empty.");
+			return;
+		}
+
+		AnswerSheet as = new AnswerSheet();
+		for (int i = 0; i < container.size(); i++) {
+			io.println((i + 1) + ") " + container.getQuestionWithouAnswer(i));
+			as.addAnswer(container.getQuestion(i).makeAnswer());
+		}
+
+		File file = new File(io.readString("Save the answersheet: Enter file name"));
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
+			os.writeObject(as);
+			os.close();
+			io.println("Saved.");
+		} catch (Exception ex) {
+			ex.printStackTrace(System.out);
+			io.println("Save Failed.");
+		}
 	}
 
-	private static void modify(Questionnaire container) {
-		if ((container == null) || (container.size() == 0))
-			io.println("It's empty.");
+	private static void modify(Map<String, ? extends Questionnaire> qnMap) {
+		String qnName = io.readString("What questionnaire do you wish to modify?");
+		Questionnaire container = qnMap.get(qnName);
 
-		for (int i = 0; i < container.size(); i++)
-			io.println((i + 1) + ") " + container.getQuestion(i).getPrompt());
+		if ((container == null) || (container.size() == 0)) {
+			io.println("The questionnaire is empty.");
+			return;
+		}
 
+		display(container);
 		int index = 0;
-		do
-			index = io.readInt("What question do you wish to modify") - 1;
-		while ((index < 0) || (index >= container.size()));
+		do {
+			index = io.readInt("What question do you wish to modify (Enter -1 to exit)") - 1;
+			if (index == -1)
+				break;
+		} while ((index < 0) || (index >= container.size()));
 
 		container.getQuestion(index).modify();
 	}
 
-	private static void create(Questionnaire container) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static Questionnaire create(String type) {
+
+		String qnName = io.readString("What is the name of the " + type + "?");
+		Questionnaire container = null;
+		try {
+			Class qnClass = Class.forName("entity.questionnaire." + type);
+			container = (Questionnaire) qnClass.getConstructor(String.class).newInstance(qnName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return container;
+		}
+
 		while (true) {
 			io.println("1) Add a new T/F question");
 			io.println("2) Add a new multiple choice question");
@@ -138,22 +187,31 @@ public class Main {
 				container.addQuestion(factory.createMatching());
 				break;
 			case 7:
-				return;
+				return container;
 			}
 		}
 	}
 
-	private static void display(Questionnaire container) {
-		if ((container == null) || (container.isEmpty())) {
-			System.out.println("Null QuestionContainer.");
-			return;
-		}
-		for (int i = 0; i < container.size(); i++)
-			System.out.println((i + 1) + ") " + container.getQuestion(i));
+	private static void display(Map<String, ? extends Questionnaire> qnMap) {
+		String qnName = io.readString("What questionnaire do you wish to display?");
+		Questionnaire container = qnMap.get(qnName);
+		display(container);
 	}
 
-	private static void save(Questionnaire container) {
-		File file = new File(io.readString("Save file name"));
+	private static void display(Questionnaire container) {
+		if ((container == null) || (container.size() == 0)) {
+			io.println("The questionnaire is empty.");
+			return;
+		}
+
+		for (int i = 0; i < container.size(); i++)
+			io.println((i + 1) + ") " + container.getQuestion(i) + "\n");
+	}
+
+	private static void save(Map<String, ? extends Questionnaire> qnMap) {
+		String qnName = io.readString("What questionnaire do you wish to save?");
+		Questionnaire container = qnMap.get(qnName);
+		File file = new File(io.readString("Save: Enter file name"));
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
 			os.writeObject(container);
@@ -166,17 +224,38 @@ public class Main {
 	}
 
 	@SuppressWarnings("resource")
-	private static void load(Questionnaire container) {
-		File file = new File(io.readString("Load file name"));
+	private static Questionnaire load(String type) {
+		File file = new File(io.readString("Load: Enter file name"));
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
 			Questionnaire c = (Questionnaire) is.readObject();
-			if (c.getClass() == container.getClass()) {
-				container.clear();
-				container.addAll(c);
-				io.println("Loaded.");
+			if (c.getClass() == Class.forName("entity.questionnaire." + type)) {
+				io.println(c.getName() + " loaded.");
+				return c;
 			} else {
-				io.println("Mismatched type.");
+				io.println("Type mismatch.");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace(System.out);
+			io.println("Load Failed.");
+		}
+		return null;
+	}
+
+	@SuppressWarnings("resource")
+	private static void loadAnswerSheet() {
+		File file = new File(io.readString("Load: Enter file name"));
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
+			AnswerSheet as = (AnswerSheet) is.readObject();
+			if (as instanceof AnswerSheet) {
+				int i = 0;
+				for (Answer a : as) {
+					io.println((++i) + ") " + a.getQuestion());
+					io.println(a.toString() + "\n");
+				}
+			} else {
+				io.println("Type mismatch.");
 			}
 		} catch (Exception ex) {
 			io.println("Load Failed.");

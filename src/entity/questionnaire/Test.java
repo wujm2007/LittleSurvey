@@ -8,9 +8,14 @@ import entity.AnswerSheet;
 import entity.questionnaire.Questionnaire;
 import entity.question.Gradable;
 import entity.question.Question;
+import entity.question.TestQuestion;
 
 @SuppressWarnings("serial")
 public class Test extends Questionnaire {
+	public Test(String name) {
+		super(name);
+	}
+
 	private List<Question> questions = new LinkedList<Question>();
 
 	@Override
@@ -21,6 +26,15 @@ public class Test extends Questionnaire {
 	@Override
 	public final Question getQuestion(int number) {
 		return questions.get(number);
+	}
+
+	@Override
+	public final Question getQuestionWithouAnswer(int number) {
+		Question q = questions.get(number);
+		if (q instanceof TestQuestion) {
+			return ((TestQuestion) q).getQuestion();
+		} else
+			return questions.get(number);
 	}
 
 	@Override

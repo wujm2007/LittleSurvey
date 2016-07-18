@@ -14,21 +14,16 @@ public class MCAnswer extends Answer {
 	}
 
 	@Override
-	public boolean match(Answer answer) {
-		if ((answer == null) || (getQuestion() != answer.getQuestion()))
-			return false;
-		else if (answer instanceof MatchingAnswer)
-			return choices.equals(((MCAnswer) answer).choices);
-		else
-			return false;
-	}
-
-	@Override
 	public String toString() {
 		String result = "";
 		for (String key : choices.keySet())
 			if (choices.get(key))
 				result += key + ")\t";
 		return result;
+	}
+
+	@Override
+	public Object getValue() {
+		return choices;
 	}
 }

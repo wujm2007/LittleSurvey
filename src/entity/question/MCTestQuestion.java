@@ -1,25 +1,19 @@
 package entity.question;
 
+import util.visitor.QuestionVisitor;
+
 @SuppressWarnings("serial")
 public class MCTestQuestion extends TestQuestion {
-
-	public MCTestQuestion() {
-		setQuestion(new MCQuestion());
-		setAnswer(makeAnswer());
-	}
-
 	@Override
 	public String toString() {
-		String result = getQuestion().toString();
-		result += "The correct choice is " + getAnswer().toString() + "\n";
+		String result = getQuestion().toString() + "\n";
+		result += "The correct choice is " + getAnswer().toString();
 		return result;
 	}
 
 	@Override
-	public void modify() {
-		getQuestion().modify();
-		if (io().readBoolean("Do you wish to modify the answer", "yes", "no"))
-			setAnswer(makeAnswer());
+	public void accept(QuestionVisitor v) {
+		v.visitMCTest(this);
 	}
 
 }

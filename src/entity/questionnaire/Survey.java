@@ -8,6 +8,10 @@ import entity.question.Question;
 
 @SuppressWarnings("serial")
 public class Survey extends Questionnaire {
+	public Survey(String name) {
+		super(name);
+	}
+
 	private List<Question> questions = new LinkedList<Question>();
 
 	@Override
@@ -38,6 +42,11 @@ public class Survey extends Questionnaire {
 	@Override
 	public boolean isEmpty() {
 		return questions.isEmpty();
+	}
+
+	@Override
+	public Question getQuestionWithouAnswer(int number) {
+		return getQuestion(number);
 	}
 
 }

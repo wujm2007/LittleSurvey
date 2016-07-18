@@ -4,7 +4,7 @@ import entity.question.Question;
 
 @SuppressWarnings("serial")
 public class TFAnswer extends Answer {
-	private boolean truth;
+	private Boolean truth;
 
 	public TFAnswer(Question question, boolean truth) {
 		super(question);
@@ -12,18 +12,13 @@ public class TFAnswer extends Answer {
 	}
 
 	@Override
-	public boolean match(Answer answer) {
-		if ((answer == null) || (getQuestion() != answer.getQuestion()))
-			return false;
-		else if (answer instanceof MatchingAnswer)
-			return truth == ((TFAnswer) answer).truth;
-		else
-			return false;
+	public String toString() {
+		return truth ? "True" : "False";
 	}
 
 	@Override
-	public String toString() {
-		return truth ? "T" : "F";
+	public Object getValue() {
+		return truth;
 	}
 
 }

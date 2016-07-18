@@ -1,20 +1,31 @@
 package entity;
 
-import java.util.Map;
-
 import entity.answer.Answer;
 import entity.question.Question;
 
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public class AnswerSheet {
-	Map<Question, Answer> answerSheet = new HashMap<Question, Answer>();
-
-	public Answer getAnswer(Question question) {
-		return answerSheet.get(question);
-	}
+@SuppressWarnings("serial")
+public class AnswerSheet implements Iterable<Answer>, Serializable {
+	private List<Answer> answerSheet = new LinkedList<Answer>();
 
 	public void addAnswer(Answer answer) {
-		answerSheet.put(answer.getQuestion(), answer);
+		answerSheet.add(answer);
+	}
+
+	@Override
+	public Iterator<Answer> iterator() {
+		return answerSheet.iterator();
+	}
+
+	public Answer getAnswer(Question q) {
+		for (Answer a : this) {
+			if (a.getQuestion() == q)
+				return a;
+		}
+		return null;
 	}
 }

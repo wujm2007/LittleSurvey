@@ -49,9 +49,16 @@ public class IOHelper {
 			return readChoices(type);
 		}
 		List<String> choiceList = new LinkedList<String>();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
 			choiceList.add(readString("(" + (char) ('A' + i) + ")"));
-		}
+		return choiceList;
+	}
+
+	public List<String> readChoices(String type, int n) {
+		this.println("Enter the choices for " + type);
+		List<String> choiceList = new LinkedList<String>();
+		for (int i = 0; i < n; i++)
+			choiceList.add(readString("(" + (char) ('A' + i) + ")"));
 		return choiceList;
 	}
 

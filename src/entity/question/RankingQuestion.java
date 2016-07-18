@@ -7,89 +7,37 @@ import java.util.TreeMap;
 
 import entity.answer.Answer;
 import entity.answer.RankingAnswer;
+import util.visitor.QuestionVisitor;
 
 @SuppressWarnings("serial")
 public class RankingQuestion extends Question {
-	private String prompt;
 	protected List<String> choices;
 
-	@Override
-	public String getPrompt() {
-		return prompt;
+	public List<String> getChoices() {
+		return this.choices;
 	}
 
-	@Override
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
-	}
-
-	public final List<String> getChoices() {
-		return choices;
-	}
-
-	public RankingQuestion() {
-		setPrompt(io().readPrompt("ranking"));
-		choices = io().readChoices("ranking");
+	public final void setChoices(List<String> choices) {
+		this.choices = choices;
 	}
 
 	@Override
 	public String toString() {
 		String result = getPrompt() + "\n";
-		result += choices2String() + "\n";
+		result += choicesToString();
 		return result;
 	}
 
-	@Override
-	public void modify() {
-		io().println("The old prompt was: " + getPrompt());
-		if (io().readBoolean("Do you wish to modify the prompt", "yes", "no")) {
-			setPrompt(io().readPrompt("multiple choice"));
-			io().println("The new prompt is: " + getPrompt());
-		}
-
-		io().println("The old choices were: ");
-		io().println(choices2String());
-		while (io().readBoolean("Do you wish to add/remove choices", "yes", "no")) {
-
-			if (io().readBoolean("Do you wish to add choices", "yes", "no"))
-				choices.add(io().readString("New choice"));
-			if (io().readBoolean("Do you wish to remove choices", "yes", "no")) {
-				io().println("Which choice do you want to remove");
-				int index = io().readChoice();
-				if ((index >= 0) && (index < getChoices().size()))
-					choices.remove(index);
-				else
-					io().println("Index error.");
-			}
-
-			io().println("The new choices are: ");
-			io().println(choices2String());
-
-		}
-		while (io().readBoolean("Do you wish to modify choices", "yes", "no")) {
-			io().println("The old choices were: ");
-			io().println(choices2String());
-			io().println("Which choice do you want to modify?");
-			int index = io().readChoice();
-			if ((index >= 0) && (index < getChoices().size())) {
-				choices.set(index, io().readString("New choice"));
-				io().println("The new choices are: ");
-				io().println(choices2String());
-			} else
-				io().println("Index error.");
-		}
-	}
-
-	private String choices2String() {
+	public String choicesToString() {
 		String result = "";
 		for (int i = 0; i < choices.size(); i++)
-			result += (char) ('A' + i) + ") " + choices.get(i) + " ";
+			result += (char) ('A' + i) + ") " + choices.get(i) + "\t";
 		return result;
 	}
 
 	@Override
 	public Answer makeAnswer() {
-		List<String> standardAnswer = readRanking(getChoices());
+		List<String> standardAnswer = readRanking(choices);
 		Map<Integer, String> mapAnswer = new TreeMap<Integer, String>();
 		for (int i = 0; i < standardAnswer.size(); i++)
 			mapAnswer.put(i, standardAnswer.get(i));
@@ -110,5 +58,10 @@ public class RankingQuestion extends Question {
 			}
 		}
 		return answer;
+	}
+
+	@Override
+	public void accept(QuestionVisitor v) {
+		v.visitRanking(this);
 	}
 }

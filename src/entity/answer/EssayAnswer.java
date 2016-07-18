@@ -26,4 +26,9 @@ public class EssayAnswer extends Answer {
 		return content;
 	}
 
+	@Override
+	public Object getValue() {
+		return content;
+	}
+
 }
