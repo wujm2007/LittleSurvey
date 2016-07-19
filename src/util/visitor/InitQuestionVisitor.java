@@ -13,10 +13,11 @@ import entity.question.SAQuestion;
 import entity.question.SATestQuestion;
 import entity.question.TFQuestion;
 import entity.question.TFTestQuestion;
-import util.IOHelper;
+import util.AbstractIOHelper;
+import util.CmdLineIOHelper;
 
-public class InitVisitor extends QuestionVisitor {
-	IOHelper io = IOHelper.getInstance();
+public class InitQuestionVisitor extends QuestionVisitor {
+	AbstractIOHelper io = CmdLineIOHelper.getInstance();
 
 	@Override
 	public void visitTF(TFQuestion q) {

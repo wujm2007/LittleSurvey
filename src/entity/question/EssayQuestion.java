@@ -13,7 +13,7 @@ public class EssayQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		return new EssayAnswer(this, io().readString("Essay answer"));
+		return new EssayAnswer(this);
 	}
 
 	@Override

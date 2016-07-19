@@ -1,8 +1,6 @@
 package entity.question;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import entity.answer.Answer;
 import entity.answer.MatchingAnswer;
@@ -51,23 +49,12 @@ public class MatchingQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		return new MatchingAnswer(this, readMatching(choicesLeft, choicesRight));
-	}
-
-	private Map<String, String> readMatching(List<String> choicesLeft, List<String> choicesRight) {
-		io().println("Enter the matching:");
-		Map<String, String> answer = new HashMap<String, String>();
-		for (int i = 0; i < choicesLeft.size(); i++) {
-			String tmp = io().readString("#" + (i + 1) + ": " + choicesLeft.get(i));
-			int index = io().getIndex(tmp);
-			if ((index >= 0) && (index < choicesRight.size()))
-				answer.put(choicesLeft.get(i), choicesRight.get(index));
-			else {
-				io().println("Invalid index.");
-				i--;
-			}
+		try {
+			return new MatchingAnswer(this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return answer;
+		return null;
 	}
 
 	@Override

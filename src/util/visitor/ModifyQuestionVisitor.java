@@ -15,10 +15,69 @@ import entity.question.SATestQuestion;
 import entity.question.TFQuestion;
 import entity.question.TFTestQuestion;
 import entity.question.TestQuestion;
-import util.IOHelper;
+import util.AbstractIOHelper;
+import util.CmdLineIOHelper;
 
-public class ModifyVisitor extends QuestionVisitor {
-	IOHelper io = IOHelper.getInstance();
+public class ModifyQuestionVisitor extends QuestionVisitor {
+	AbstractIOHelper io = CmdLineIOHelper.getInstance();
+
+	@Override
+	public void visitTF(TFQuestion q) {
+		modifyPrompt(q, "True/False");
+	}
+
+	@Override
+	public void visitTFTest(TFTestQuestion q) {
+		modifyTestQuestion(q);
+	}
+
+	@Override
+	public void visitMC(MCQuestion q) {
+		modifyPrompt(q, "multiple choice");
+		modifyChoices(q.getChoices());
+	}
+
+	@Override
+	public void visitMCTest(MCTestQuestion q) {
+		modifyTestQuestion(q);
+	}
+
+	@Override
+	public void visitSA(SAQuestion q) {
+		modifyPrompt(q, "short answer");
+	}
+
+	@Override
+	public void visitSATest(SATestQuestion q) {
+		modifyTestQuestion(q);
+	}
+
+	@Override
+	public void visitEssay(EssayQuestion q) {
+		modifyPrompt(q, "essay");
+	}
+
+	@Override
+	public void visitRanking(RankingQuestion q) {
+		modifyPrompt(q, "ranking question");
+		modifyChoices(q.getChoices());
+	}
+
+	@Override
+	public void visitRankingTest(RankingTestQuestion q) {
+		modifyTestQuestion(q);
+	}
+
+	@Override
+	public void visitMatching(MatchingQuestion q) {
+		modifyPrompt(q, "matching question");
+		modifyChoices(q.getChoicesLeft(), q.getChoicesRight());
+	}
+
+	@Override
+	public void visitMatchingTest(MatchingTestQuestion q) {
+		modifyTestQuestion(q);
+	}
 
 	private void modifyPrompt(Question q, String type) {
 		io.println("The old prompt was: " + q.getPrompt());
@@ -125,63 +184,4 @@ public class ModifyVisitor extends QuestionVisitor {
 				io.println("Index error.");
 		}
 	}
-
-	@Override
-	public void visitTF(TFQuestion q) {
-		modifyPrompt(q, "True/False");
-	}
-
-	@Override
-	public void visitTFTest(TFTestQuestion q) {
-		modifyTestQuestion(q);
-	}
-
-	@Override
-	public void visitMC(MCQuestion q) {
-		modifyPrompt(q, "multiple choice");
-		modifyChoices(q.getChoices());
-	}
-
-	@Override
-	public void visitMCTest(MCTestQuestion q) {
-		modifyTestQuestion(q);
-	}
-
-	@Override
-	public void visitSA(SAQuestion q) {
-		modifyPrompt(q, "short answer");
-	}
-
-	@Override
-	public void visitSATest(SATestQuestion q) {
-		modifyTestQuestion(q);
-	}
-
-	@Override
-	public void visitEssay(EssayQuestion q) {
-		modifyPrompt(q, "essay");
-	}
-
-	@Override
-	public void visitRanking(RankingQuestion q) {
-		modifyPrompt(q, "ranking question");
-		modifyChoices(q.getChoices());
-	}
-
-	@Override
-	public void visitRankingTest(RankingTestQuestion q) {
-		modifyTestQuestion(q);
-	}
-
-	@Override
-	public void visitMatching(MatchingQuestion q) {
-		modifyPrompt(q, "matching question");
-		modifyChoices(q.getChoicesLeft(), q.getChoicesRight());
-	}
-
-	@Override
-	public void visitMatchingTest(MatchingTestQuestion q) {
-		modifyTestQuestion(q);
-	}
-
 }

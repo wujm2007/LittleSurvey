@@ -4,14 +4,23 @@ import java.util.Map;
 
 import entity.answer.Answer;
 import entity.question.Question;
+import entity.question.RankingQuestion;
+import util.visitor.AnswerVisitor;
+import util.visitor.InitAnswerVisitor;
 
 @SuppressWarnings("serial")
 public class RankingAnswer extends Answer {
 	private Map<Integer, String> map;
 
-	public RankingAnswer(Question question, Map<Integer, String> mapAnswer) {
+	public final void setMap(Map<Integer, String> map) {
+		this.map = map;
+	}
+
+	public RankingAnswer(Question question) throws Exception {
 		super(question);
-		this.map = mapAnswer;
+		if (!(question instanceof RankingQuestion))
+			throw new Exception("Question type error.");
+		accept(new InitAnswerVisitor());
 	}
 
 	@Override
@@ -25,6 +34,11 @@ public class RankingAnswer extends Answer {
 	@Override
 	public Object getValue() {
 		return map;
+	}
+
+	@Override
+	public void accept(AnswerVisitor v) {
+		v.visitRanking(this);
 	}
 
 }

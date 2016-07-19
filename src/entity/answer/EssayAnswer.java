@@ -1,24 +1,20 @@
 package entity.answer;
 
 import entity.question.Question;
+import util.visitor.AnswerVisitor;
+import util.visitor.InitAnswerVisitor;
 
 @SuppressWarnings("serial")
 public class EssayAnswer extends Answer {
 	private String content;
 
-	public EssayAnswer(Question question, String content) {
+	public EssayAnswer(Question question) {
 		super(question);
-		this.content = content;
+		accept(new InitAnswerVisitor());
 	}
 
-	@Override
-	public boolean match(Answer answer) {
-		try {
-			throw new Exception("EssayAnswer is not matchable.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+	public final void setContent(String content) {
+		this.content = content;
 	}
 
 	@Override
@@ -29,6 +25,21 @@ public class EssayAnswer extends Answer {
 	@Override
 	public Object getValue() {
 		return content;
+	}
+
+	@Override
+	public void accept(AnswerVisitor v) {
+		v.visitEssay(this);
+	}
+
+	@Override
+	public boolean match(Answer answer) {
+		try {
+			throw new Exception("EssayAnswer is not matchable.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

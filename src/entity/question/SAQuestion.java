@@ -14,7 +14,7 @@ public class SAQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		return new SAAnswer(this, io().readString("Enter answer"));
+		return new SAAnswer(this);
 	}
 
 	@Override

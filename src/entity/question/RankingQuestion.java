@@ -1,9 +1,6 @@
 package entity.question;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import entity.answer.Answer;
 import entity.answer.RankingAnswer;
@@ -37,27 +34,12 @@ public class RankingQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		List<String> standardAnswer = readRanking(choices);
-		Map<Integer, String> mapAnswer = new TreeMap<Integer, String>();
-		for (int i = 0; i < standardAnswer.size(); i++)
-			mapAnswer.put(i, standardAnswer.get(i));
-		return new RankingAnswer(this, mapAnswer);
-	}
-
-	private List<String> readRanking(List<String> choices) {
-		io().println("Enter the ranking:");
-		List<String> answer = new ArrayList<String>();
-		for (int i = 0; i < choices.size(); i++) {
-			String tmp = io().readString("#" + (i + 1));
-			int index = io().getIndex(tmp);
-			if ((index >= 0) && (index < choices.size()) && (!answer.contains(tmp)))
-				answer.add(tmp);
-			else {
-				io().println("Invalid index.");
-				i--;
-			}
+		try {
+			return new RankingAnswer(this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return answer;
+		return null;
 	}
 
 	@Override

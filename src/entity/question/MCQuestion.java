@@ -1,9 +1,6 @@
 package entity.question;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import entity.answer.Answer;
 import entity.answer.MCAnswer;
@@ -37,31 +34,12 @@ public class MCQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		List<String> standardAnswer = readChoices(choices);
-		Map<String, Boolean> mapAnswer = new TreeMap<String, Boolean>();
-		for (int i = 0; i < standardAnswer.size(); i++)
-			mapAnswer.put(standardAnswer.get(i), true);
-		return new MCAnswer(this, mapAnswer);
-	}
-
-	private List<String> readChoices(List<String> choices) {
-		int n = io().readInt("Enter the number of choices");
-		if ((n > choices.size()) || (n < 1)) {
-			io().println("Invalid number.");
-			return readChoices(choices);
+		try {
+			return new MCAnswer(this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		List<String> answer = new ArrayList<String>();
-		for (int i = 0; i < n; i++) {
-			String tmp = io().readString("answer #" + (i + 1)).toUpperCase();
-			int index = io().getIndex(tmp);
-			if ((index >= 0) && (index < choices.size()) && (!answer.contains(tmp)))
-				answer.add(tmp);
-			else {
-				io().println("Invalid index.");
-				i--;
-			}
-		}
-		return answer;
+		return null;
 	}
 
 	@Override

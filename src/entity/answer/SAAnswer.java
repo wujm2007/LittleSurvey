@@ -1,13 +1,19 @@
 package entity.answer;
 
 import entity.question.Question;
+import util.visitor.AnswerVisitor;
+import util.visitor.InitAnswerVisitor;
 
 @SuppressWarnings("serial")
 public class SAAnswer extends Answer {
 	private String content;
 
-	public SAAnswer(Question question, String content) {
+	public SAAnswer(Question question) {
 		super(question);
+		accept(new InitAnswerVisitor());
+	}
+
+	public final void setContent(String content) {
 		this.content = content;
 	}
 
@@ -19,6 +25,11 @@ public class SAAnswer extends Answer {
 	@Override
 	public Object getValue() {
 		return content;
+	}
+
+	@Override
+	public void accept(AnswerVisitor v) {
+		v.visitSA(this);
 	}
 
 }

@@ -14,7 +14,7 @@ public class TFQuestion extends Question {
 
 	@Override
 	public Answer makeAnswer() {
-		return new TFAnswer(this, io().readBoolean("Enter choice", "true", "false"));
+		return new TFAnswer(this);
 	}
 
 	@Override

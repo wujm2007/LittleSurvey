@@ -16,16 +16,16 @@ import entity.factory.TestQuestionFactory;
 import entity.questionnaire.Questionnaire;
 import entity.questionnaire.Survey;
 import entity.questionnaire.Test;
-import util.IOHelper;
+import util.AbstractIOHelper;
+import util.CmdLineIOHelper;
 
 public class Main {
-	private static IOHelper io = IOHelper.getInstance();
+	private static AbstractIOHelper io = CmdLineIOHelper.getInstance();
 	private static Map<String, Survey> surveys;
 	private static Map<String, Test> tests;
-	private static QuestionFactory factory;
 
 	public static void main(String args[]) {
-		io = IOHelper.getInstance();
+		io = CmdLineIOHelper.getInstance();
 		surveys = new HashMap<String, Survey>();
 		tests = new HashMap<String, Test>();
 		showMenu();
@@ -33,6 +33,7 @@ public class Main {
 
 	public static void showMenu() {
 		while (true) {
+			io.println("0) Display Survey/Test list");
 			io.println("1) Create a new Survey");
 			io.println("2) Create a new Test");
 			io.println("3) Display a Survey");
@@ -48,14 +49,15 @@ public class Main {
 			io.println("13) Quit");
 			int op = io.readInt("Select an option");
 			switch (op) {
+			case 0:
+				displayList();
+				break;
 			case 1:
-				factory = new SurveyQuestionFactory();
-				Survey createdSurvey = (Survey) create("Survey");
+				Survey createdSurvey = (Survey) create("Survey", new SurveyQuestionFactory());
 				surveys.put(createdSurvey.getName(), createdSurvey);
 				break;
 			case 2:
-				factory = new TestQuestionFactory();
-				Test createdTest = (Test) create("Test");
+				Test createdTest = (Test) create("Test", new TestQuestionFactory());
 				tests.put(createdTest.getName(), createdTest);
 				break;
 			case 3:
@@ -78,11 +80,13 @@ public class Main {
 				break;
 			case 9:
 				Survey loadedSurvey = (Survey) load("Survey");
-				surveys.put(loadedSurvey.getName(), loadedSurvey);
+				if (loadedSurvey != null)
+					surveys.put(loadedSurvey.getName(), loadedSurvey);
 				break;
 			case 10:
 				Test loadedTest = (Test) load("Test");
-				tests.put(loadedTest.getName(), loadedTest);
+				if (loadedTest != null)
+					tests.put(loadedTest.getName(), loadedTest);
 				break;
 			case 11:
 				take(surveys);
@@ -96,6 +100,22 @@ public class Main {
 				loadAnswerSheet();
 			}
 		}
+	}
+
+	private static void displayList() {
+		io.println("Survey list:");
+		if (surveys.isEmpty())
+			io.println("There's no survey.");
+		else
+			for (String s : surveys.keySet())
+				io.println(s);
+		io.println("Test list:");
+		if (surveys.isEmpty())
+			io.println("There's no test.");
+		else
+			for (String s : tests.keySet())
+				io.println(s);
+
 	}
 
 	private static void take(Map<String, ? extends Questionnaire> qnMap) {
@@ -137,7 +157,7 @@ public class Main {
 		display(container);
 		int index = 0;
 		do {
-			index = io.readInt("What question do you wish to modify (Enter -1 to exit)") - 1;
+			index = io.readInt("What question do you wish to modify (Enter 0 to exit)") - 1;
 			if (index == -1)
 				break;
 		} while ((index < 0) || (index >= container.size()));
@@ -146,7 +166,7 @@ public class Main {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Questionnaire create(String type) {
+	private static Questionnaire create(String type, QuestionFactory factory) {
 
 		String qnName = io.readString("What is the name of the " + type + "?");
 		Questionnaire container = null;

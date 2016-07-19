@@ -3,9 +3,8 @@ package entity.question;
 import java.io.Serializable;
 
 import entity.answer.Answer;
-import util.IOHelper;
-import util.visitor.InitVisitor;
-import util.visitor.ModifyVisitor;
+import util.visitor.InitQuestionVisitor;
+import util.visitor.ModifyQuestionVisitor;
 import util.visitor.QuestionVisitor;
 
 @SuppressWarnings("serial")
@@ -13,11 +12,7 @@ public abstract class Question implements Serializable {
 	private String prompt;
 
 	public Question() {
-		accept(new InitVisitor());
-	}
-
-	public IOHelper io() {
-		return IOHelper.getInstance();
+		accept(new InitQuestionVisitor());
 	}
 
 	public String getPrompt() {
@@ -29,7 +24,7 @@ public abstract class Question implements Serializable {
 	}
 
 	public void modify() {
-		accept(new ModifyVisitor());
+		accept(new ModifyQuestionVisitor());
 	}
 
 	public abstract Answer makeAnswer();

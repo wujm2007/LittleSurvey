@@ -3,6 +3,7 @@ package entity.answer;
 import java.io.Serializable;
 
 import entity.question.Question;
+import util.visitor.AnswerVisitor;
 
 @SuppressWarnings("serial")
 public abstract class Answer implements Serializable {
@@ -12,9 +13,11 @@ public abstract class Answer implements Serializable {
 		this.question = question;
 	}
 
-	public final Question getQuestion() {
+	public Question getQuestion() {
 		return question;
 	}
+
+	public abstract void accept(AnswerVisitor v);
 
 	public abstract Object getValue();
 
@@ -22,7 +25,7 @@ public abstract class Answer implements Serializable {
 		if ((answer == null) || (getQuestion() != answer.getQuestion()))
 			return false;
 		else
-			return getValue().equals(((MatchingAnswer) answer).getValue());
+			return getValue().equals(answer.getValue());
 	}
 
 	public abstract String toString();

@@ -4,16 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class IOHelper {
-	private static IOHelper instance;
+public class CmdLineIOHelper extends AbstractIOHelper {
+	private static CmdLineIOHelper instance;
 	private Scanner scanner;
 
-	private IOHelper() {
+	private CmdLineIOHelper() {
 	};
 
-	public static IOHelper getInstance() {
+	public static AbstractIOHelper getInstance() {
 		if (instance == null) {
-			return (instance = new IOHelper());
+			return (instance = new CmdLineIOHelper());
 		}
 		return instance;
 	}
