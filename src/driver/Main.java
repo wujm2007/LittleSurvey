@@ -34,13 +34,14 @@ public class Main {
 		io = ConsoleUIImp.getInstance();
 		surveys = new HashMap<String, Survey>();
 		tests = new HashMap<String, Test>();
+		io.println("You can load Survey:s1.srv, Test:t1.tst.\n");
 		showMenu();
 	}
 
 	// print menu and operate according to user's selection
 	public static void showMenu() {
 		while (true) {
-			io.println("0) Display Survey/Test list");
+			// io.println("0) Display Survey/Test list");
 			io.println("1) Create a new Survey");
 			io.println("2) Create a new Test");
 			io.println("3) Display a Survey");
@@ -294,10 +295,15 @@ public class Main {
 		}
 	}
 
+	private static Questionnaire load(String type) {
+		String addr = io.readString("Load: Enter file name");
+		return load(type, addr);
+	}
+
 	// load a Questionnaire from a file using ObjectInputStream
 	@SuppressWarnings("resource")
-	private static Questionnaire load(String type) {
-		File file = new File(io.readString("Load: Enter file name"));
+	private static Questionnaire load(String type, String addr) {
+		File file = new File(addr);
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
 			Questionnaire c = (Questionnaire) is.readObject();
@@ -316,11 +322,15 @@ public class Main {
 	}
 
 	// load an AnswerSheet from a file using ObjectInputStream
-	@SuppressWarnings("resource")
 	private static void loadAnswerSheet() {
-		File file = new File(io.readString("Load: Enter file name"));
+		String addr = io.readString("Load: Enter file name");
+		loadAnswerSheet(addr);
+	}
+
+	@SuppressWarnings("resource")
+	private static void loadAnswerSheet(String addr) {
 		try {
-			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream(new File(addr)));
 			AnswerSheet as = (AnswerSheet) is.readObject();
 			if (as instanceof AnswerSheet) {
 				int i = 0;
