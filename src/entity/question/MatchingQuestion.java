@@ -6,6 +6,9 @@ import entity.answer.Answer;
 import entity.answer.MatchingAnswer;
 import util.visitor.QuestionVisitor;
 
+/*
+ * See Question.java
+ */
 @SuppressWarnings("serial")
 public class MatchingQuestion extends Question {
 	private List<String> choicesLeft;
@@ -34,6 +37,7 @@ public class MatchingQuestion extends Question {
 		return result;
 	}
 
+	// a helper method to transform choices to String
 	public String choicesToString() {
 		String result = "";
 		int maxChoiceNum = choicesLeft.size() > choicesRight.size() ? choicesLeft.size() : choicesRight.size();

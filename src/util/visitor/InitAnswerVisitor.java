@@ -16,11 +16,15 @@ import entity.question.MCQuestion;
 import entity.question.MatchingQuestion;
 import entity.question.Question;
 import entity.question.RankingQuestion;
-import util.AbstractIOHelper;
-import util.CmdLineIOHelper;
+import util.UIImp;
+import util.ConsoleUIImp;
+
+/* 
+ * An AnswerVisitor defines how to initiate an Answer.
+ */
 
 public class InitAnswerVisitor extends AnswerVisitor {
-	AbstractIOHelper io = CmdLineIOHelper.getInstance();
+	UIImp io = ConsoleUIImp.getInstance();
 
 	@Override
 	public void visitTF(TFAnswer a) {

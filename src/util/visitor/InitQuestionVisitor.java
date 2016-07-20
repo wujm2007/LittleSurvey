@@ -13,11 +13,14 @@ import entity.question.SAQuestion;
 import entity.question.SATestQuestion;
 import entity.question.TFQuestion;
 import entity.question.TFTestQuestion;
-import util.AbstractIOHelper;
-import util.CmdLineIOHelper;
+import util.UIImp;
+import util.ConsoleUIImp;
 
+/* 
+ * An QuestionVisitor defines how to initiate a Question.
+ */
 public class InitQuestionVisitor extends QuestionVisitor {
-	AbstractIOHelper io = CmdLineIOHelper.getInstance();
+	UIImp io = ConsoleUIImp.getInstance();
 
 	@Override
 	public void visitTF(TFQuestion q) {

@@ -4,6 +4,9 @@ import entity.question.Question;
 import util.visitor.AnswerVisitor;
 import util.visitor.InitAnswerVisitor;
 
+/*
+ * See Answer.java
+ */
 @SuppressWarnings("serial")
 public class SAAnswer extends Answer {
 	private String content;

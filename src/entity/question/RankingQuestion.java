@@ -6,6 +6,9 @@ import entity.answer.Answer;
 import entity.answer.RankingAnswer;
 import util.visitor.QuestionVisitor;
 
+/*
+ * See Question.java
+ */
 @SuppressWarnings("serial")
 public class RankingQuestion extends Question {
 	protected List<String> choices;
@@ -25,7 +28,8 @@ public class RankingQuestion extends Question {
 		return result;
 	}
 
-	public String choicesToString() {
+	// a helper method to transform choices to String
+	private String choicesToString() {
 		String result = "";
 		for (int i = 0; i < choices.size(); i++)
 			result += (char) ('A' + i) + ") " + choices.get(i) + "\t";

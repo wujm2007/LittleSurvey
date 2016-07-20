@@ -15,11 +15,14 @@ import entity.question.SATestQuestion;
 import entity.question.TFQuestion;
 import entity.question.TFTestQuestion;
 import entity.question.TestQuestion;
-import util.AbstractIOHelper;
-import util.CmdLineIOHelper;
+import util.UIImp;
+import util.ConsoleUIImp;
 
+/* 
+ * An QuestionVisitor defines how to modify a Question.
+ */
 public class ModifyQuestionVisitor extends QuestionVisitor {
-	AbstractIOHelper io = CmdLineIOHelper.getInstance();
+	UIImp io = ConsoleUIImp.getInstance();
 
 	@Override
 	public void visitTF(TFQuestion q) {
@@ -88,7 +91,7 @@ public class ModifyQuestionVisitor extends QuestionVisitor {
 	}
 
 	private void modifyTestQuestion(TestQuestion q) {
-		q.getQuestion().modify();
+		q.getQuestion().accept(new ModifyQuestionVisitor());
 		if (io.readBoolean("Do you wish to modify the answer", "yes", "no"))
 			q.setAnswer(q.makeAnswer());
 	}

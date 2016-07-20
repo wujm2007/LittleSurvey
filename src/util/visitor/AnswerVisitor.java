@@ -2,6 +2,12 @@ package util.visitor;
 
 import entity.answer.*;
 
+/* 
+ * The AnswerVisitor interface (an abstract class to be exact).
+ * 
+ * It'a apart of the Visitor Pattern on Answer.
+ */
+
 public abstract class AnswerVisitor {
 
 	public abstract void visitTF(TFAnswer a);

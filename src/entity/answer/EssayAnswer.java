@@ -4,6 +4,9 @@ import entity.question.Question;
 import util.visitor.AnswerVisitor;
 import util.visitor.InitAnswerVisitor;
 
+/*
+ * See Answer.java
+ */
 @SuppressWarnings("serial")
 public class EssayAnswer extends Answer {
 	private String content;
@@ -32,6 +35,7 @@ public class EssayAnswer extends Answer {
 		v.visitEssay(this);
 	}
 
+	// This is specially overridden because EssayAnswer is not matchable.
 	@Override
 	public boolean match(Answer answer) {
 		try {

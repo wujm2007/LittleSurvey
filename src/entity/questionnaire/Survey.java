@@ -6,6 +6,9 @@ import java.util.List;
 
 import entity.question.Question;
 
+/*
+ * See Questionnaire.java
+ */
 @SuppressWarnings("serial")
 public class Survey extends Questionnaire {
 	public Survey(String name) {
@@ -45,8 +48,18 @@ public class Survey extends Questionnaire {
 	}
 
 	@Override
-	public Question getQuestionWithouAnswer(int number) {
+	public Question getQuestionWithoutAnswer(int number) {
 		return getQuestion(number);
+	}
+
+	@Override
+	public void removeQuestion(int number) {
+		questions.remove(number);
+	}
+
+	@Override
+	public void removeQuestion(Question q) {
+		questions.remove(q);
 	}
 
 }

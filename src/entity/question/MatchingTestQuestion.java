@@ -2,6 +2,9 @@ package entity.question;
 
 import util.visitor.QuestionVisitor;
 
+/*
+ * See TestQuestion.java
+ */
 @SuppressWarnings("serial")
 public class MatchingTestQuestion extends TestQuestion {
 

@@ -8,6 +8,9 @@ import entity.question.RankingQuestion;
 import util.visitor.AnswerVisitor;
 import util.visitor.InitAnswerVisitor;
 
+/*
+ * See Answer.java
+ */
 @SuppressWarnings("serial")
 public class RankingAnswer extends Answer {
 	private Map<Integer, String> map;

@@ -10,6 +10,9 @@ import entity.question.Gradable;
 import entity.question.Question;
 import entity.question.TestQuestion;
 
+/*
+ * See Questionnaire.java
+ */
 @SuppressWarnings("serial")
 public class Test extends Questionnaire {
 	public Test(String name) {
@@ -29,7 +32,7 @@ public class Test extends Questionnaire {
 	}
 
 	@Override
-	public final Question getQuestionWithouAnswer(int number) {
+	public final Question getQuestionWithoutAnswer(int number) {
 		Question q = questions.get(number);
 		if (q instanceof TestQuestion) {
 			return ((TestQuestion) q).getQuestion();
@@ -55,6 +58,16 @@ public class Test extends Questionnaire {
 	@Override
 	public boolean isEmpty() {
 		return questions.isEmpty();
+	}
+
+	@Override
+	public void removeQuestion(int number) {
+		questions.remove(number);
+	}
+
+	@Override
+	public void removeQuestion(Question q) {
+		questions.remove(q);
 	}
 
 	public double grade(AnswerSheet answerSheet) {

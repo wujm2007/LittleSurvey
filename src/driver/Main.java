@@ -16,21 +16,28 @@ import entity.factory.TestQuestionFactory;
 import entity.questionnaire.Questionnaire;
 import entity.questionnaire.Survey;
 import entity.questionnaire.Test;
-import util.AbstractIOHelper;
-import util.CmdLineIOHelper;
+import util.UIImp;
+import util.ConsoleUIImp;
+import util.visitor.ModifyQuestionVisitor;
+
+/*
+ * This is the main driver of the project.
+ */
 
 public class Main {
-	private static AbstractIOHelper io = CmdLineIOHelper.getInstance();
+	private static UIImp io = ConsoleUIImp.getInstance();
 	private static Map<String, Survey> surveys;
 	private static Map<String, Test> tests;
 
+	// initialize the filed and print menu
 	public static void main(String args[]) {
-		io = CmdLineIOHelper.getInstance();
+		io = ConsoleUIImp.getInstance();
 		surveys = new HashMap<String, Survey>();
 		tests = new HashMap<String, Test>();
 		showMenu();
 	}
 
+	// print menu and operate according to user's selection
 	public static void showMenu() {
 		while (true) {
 			io.println("0) Display Survey/Test list");
@@ -73,10 +80,10 @@ public class Main {
 				save(tests);
 				break;
 			case 7:
-				modify(surveys);
+				modify(surveys, new SurveyQuestionFactory());
 				break;
 			case 8:
-				modify(tests);
+				modify(tests, new TestQuestionFactory());
 				break;
 			case 9:
 				Survey loadedSurvey = (Survey) load("Survey");
@@ -96,12 +103,14 @@ public class Main {
 				break;
 			case 13:
 				return;
+			// this is a hidden entry for debugging (see loadAnswerSheet())
 			case 14:
 				loadAnswerSheet();
 			}
 		}
 	}
 
+	// display survey list and test list
 	private static void displayList() {
 		io.println("Survey list:");
 		if (surveys.isEmpty())
@@ -118,21 +127,27 @@ public class Main {
 
 	}
 
+	// take a Questionnaire according to user's selection
 	private static void take(Map<String, ? extends Questionnaire> qnMap) {
+		// get user's selection
 		String qnName = io.readString("What questionnaire do you wish to take?");
 		Questionnaire container = qnMap.get(qnName);
 
+		// check if the Questionnaire is null or empty
 		if ((container == null) || (container.size() == 0)) {
 			io.println("The questionnaire is empty.");
 			return;
 		}
 
+		// create an AnswerSheet to hold the answer
 		AnswerSheet as = new AnswerSheet();
+		// iterate the Questionnaire to let user answer
 		for (int i = 0; i < container.size(); i++) {
-			io.println((i + 1) + ") " + container.getQuestionWithouAnswer(i));
+			io.println((i + 1) + ") " + container.getQuestionWithoutAnswer(i));
 			as.addAnswer(container.getQuestion(i).makeAnswer());
 		}
 
+		// save the response
 		File file = new File(io.readString("Save the answersheet: Enter file name"));
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
@@ -140,44 +155,73 @@ public class Main {
 			os.close();
 			io.println("Saved.");
 		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
+			// ex.printStackTrace(System.out);
 			io.println("Save Failed.");
 		}
 	}
 
-	private static void modify(Map<String, ? extends Questionnaire> qnMap) {
+	// modify a Questionnaire according to user's selection
+	private static void modify(Map<String, ? extends Questionnaire> qnMap, QuestionFactory factory) {
 		String qnName = io.readString("What questionnaire do you wish to modify?");
 		Questionnaire container = qnMap.get(qnName);
 
+		// check if the Questionnaire is null or empty
 		if ((container == null) || (container.size() == 0)) {
 			io.println("The questionnaire is empty.");
 			return;
 		}
 
-		display(container);
-		int index = 0;
-		do {
-			index = io.readInt("What question do you wish to modify (Enter 0 to exit)") - 1;
-			if (index == -1)
+		// add questions
+		if (io.readBoolean("Do you wish to add questions", "yes", "no")) {
+			display(container);
+			addQuestion(factory, container);
+		}
+		// remove questions
+		while (io.readBoolean("Do you wish to remove questions", "yes", "no")) {
+			display(container);
+			if (container.isEmpty())
 				break;
-		} while ((index < 0) || (index >= container.size()));
-
-		container.getQuestion(index).modify();
+			int index = io.readInt("Enter the index of that question") - 1;
+			if ((index >= 0) && (index < container.size()))
+				container.removeQuestion(index);
+			else
+				io.println("Index error.");
+		}
+		// modify questions
+		while (io.readBoolean("Do you wish to modify questions", "yes", "no")) {
+			display(container);
+			if (container.isEmpty())
+				break;
+			int index = io.readInt("Enter the index of that question") - 1;
+			if ((index >= 0) && (index < container.size()))
+				container.getQuestion(index).accept(new ModifyQuestionVisitor());
+			else
+				io.println("Index error.");
+		}
 	}
 
+	// create a Questionnaire (Test or Survey)
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static Questionnaire create(String type, QuestionFactory factory) {
 
+		// read its name
 		String qnName = io.readString("What is the name of the " + type + "?");
 		Questionnaire container = null;
 		try {
+			// use reflection to create it
 			Class qnClass = Class.forName("entity.questionnaire." + type);
 			container = (Questionnaire) qnClass.getConstructor(String.class).newInstance(qnName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace(System.out);
 			return container;
 		}
+		// add questions to it
+		addQuestion(factory, container);
+		return container;
+	}
 
+	// addQuestion is reused by create() and modify()
+	private static void addQuestion(QuestionFactory factory, Questionnaire container) {
 		while (true) {
 			io.println("1) Add a new T/F question");
 			io.println("2) Add a new multiple choice question");
@@ -207,17 +251,19 @@ public class Main {
 				container.addQuestion(factory.createMatching());
 				break;
 			case 7:
-				return container;
+				return;
 			}
 		}
 	}
 
+	// iterate the Questionnaire to display its content
 	private static void display(Map<String, ? extends Questionnaire> qnMap) {
 		String qnName = io.readString("What questionnaire do you wish to display?");
 		Questionnaire container = qnMap.get(qnName);
 		display(container);
 	}
 
+	// it's reused by display() and modify()
 	private static void display(Questionnaire container) {
 		if ((container == null) || (container.size() == 0)) {
 			io.println("The questionnaire is empty.");
@@ -228,9 +274,14 @@ public class Main {
 			io.println((i + 1) + ") " + container.getQuestion(i) + "\n");
 	}
 
+	// save a Questionnaire to a file using ObjectOutputStream
 	private static void save(Map<String, ? extends Questionnaire> qnMap) {
 		String qnName = io.readString("What questionnaire do you wish to save?");
 		Questionnaire container = qnMap.get(qnName);
+		if (container == null) {
+			io.println(qnName + " don't exsist.");
+			return;
+		}
 		File file = new File(io.readString("Save: Enter file name"));
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
@@ -238,17 +289,19 @@ public class Main {
 			os.close();
 			io.println("Saved.");
 		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
+			// ex.printStackTrace(System.out);
 			io.println("Save Failed.");
 		}
 	}
 
+	// load a Questionnaire from a file using ObjectInputStream
 	@SuppressWarnings("resource")
 	private static Questionnaire load(String type) {
 		File file = new File(io.readString("Load: Enter file name"));
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
 			Questionnaire c = (Questionnaire) is.readObject();
+			// check if the loaded Questionnaire is the exact type we want
 			if (c.getClass() == Class.forName("entity.questionnaire." + type)) {
 				io.println(c.getName() + " loaded.");
 				return c;
@@ -256,12 +309,13 @@ public class Main {
 				io.println("Type mismatch.");
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
+			// ex.printStackTrace(System.out);
 			io.println("Load Failed.");
 		}
 		return null;
 	}
 
+	// load an AnswerSheet from a file using ObjectInputStream
 	@SuppressWarnings("resource")
 	private static void loadAnswerSheet() {
 		File file = new File(io.readString("Load: Enter file name"));

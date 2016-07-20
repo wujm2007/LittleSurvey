@@ -7,6 +7,9 @@ import entity.question.Question;
 import util.visitor.AnswerVisitor;
 import util.visitor.InitAnswerVisitor;
 
+/*
+ * See Answer.java
+ */
 @SuppressWarnings("serial")
 public class MatchingAnswer extends Answer {
 	private Map<String, String> match;

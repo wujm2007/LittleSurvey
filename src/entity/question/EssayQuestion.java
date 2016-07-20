@@ -4,6 +4,9 @@ import entity.answer.Answer;
 import entity.answer.EssayAnswer;
 import util.visitor.QuestionVisitor;
 
+/*
+ * See Question.java
+ */
 @SuppressWarnings("serial")
 public class EssayQuestion extends Question {
 	@Override

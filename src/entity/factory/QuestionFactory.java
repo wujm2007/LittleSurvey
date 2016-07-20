@@ -2,6 +2,9 @@ package entity.factory;
 
 import entity.question.Question;
 
+/*
+ * This is the QuestionFactory interface (an abstract class to be exact).
+ */
 public abstract class QuestionFactory {
 
 	public abstract Question createTF();

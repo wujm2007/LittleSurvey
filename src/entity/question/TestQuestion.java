@@ -2,6 +2,16 @@ package entity.question;
 
 import entity.answer.Answer;
 
+/*
+ * This is the TestQuestion interface (an abstract class to be exact).
+ * 
+ * It holds a Question and an Answer.
+ * 
+ * The Question is the original one without an Answer, and the Answer
+ * is the standard answer to that Question.
+ * 
+ * It implements Gradable because it should have a standard Answer.
+ */
 @SuppressWarnings("serial")
 public abstract class TestQuestion extends Question implements Gradable {
 	private Question question;

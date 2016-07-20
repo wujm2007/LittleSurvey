@@ -6,6 +6,9 @@ import entity.answer.Answer;
 import entity.answer.MCAnswer;
 import util.visitor.QuestionVisitor;
 
+/*
+ * See Question.java
+ */
 @SuppressWarnings("serial")
 public class MCQuestion extends Question {
 	protected List<String> choices;

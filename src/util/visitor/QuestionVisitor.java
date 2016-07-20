@@ -2,6 +2,11 @@ package util.visitor;
 
 import entity.question.*;
 
+/* 
+ * The QuestionVisitor interface (an abstract class to be exact).
+ * 
+ * It'a apart of the Visitor Pattern on Question.
+ */
 public abstract class QuestionVisitor {
 
 	public abstract void visitTF(TFQuestion q);

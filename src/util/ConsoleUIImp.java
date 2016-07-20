@@ -4,16 +4,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CmdLineIOHelper extends AbstractIOHelper {
-	private static CmdLineIOHelper instance;
+/*
+ * Console implementation of UIImp.
+ */
+
+public class ConsoleUIImp extends UIImp {
+	private static ConsoleUIImp instance;
 	private Scanner scanner;
 
-	private CmdLineIOHelper() {
+	private ConsoleUIImp() {
 	};
 
-	public static AbstractIOHelper getInstance() {
+	public static UIImp getInstance() {
 		if (instance == null) {
-			return (instance = new CmdLineIOHelper());
+			return (instance = new ConsoleUIImp());
 		}
 		return instance;
 	}
@@ -35,7 +39,7 @@ public class CmdLineIOHelper extends AbstractIOHelper {
 	public String readPrompt(String type) {
 		System.out.print("Enter the prompt for you " + type + " question:\n> ");
 		scanner = new Scanner(System.in);
-		return scanner.next();
+		return scanner.nextLine();
 	}
 
 	public void println(String msg) {
@@ -70,7 +74,7 @@ public class CmdLineIOHelper extends AbstractIOHelper {
 
 	private String read() {
 		scanner = new Scanner(System.in);
-		return scanner.next();
+		return scanner.nextLine();
 	}
 
 	public int getIndex(String tmp) {

@@ -8,6 +8,10 @@ import entity.question.RankingTestQuestion;
 import entity.question.SATestQuestion;
 import entity.question.TFTestQuestion;
 
+/*
+ * This is the TestQuestionFactory.
+ * It's job is to create TestQuestion.
+ */
 public class TestQuestionFactory extends QuestionFactory {
 
 	public Question createTF() {
